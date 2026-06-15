@@ -1,0 +1,76 @@
+# ---- macOS ----
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ---- IDE: IntelliJ IDEA ----
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# ---- IDE: VS Code / Eclipse (in case of mixed tooling) ----
+.vscode/
+.settings/
+.project
+.classpath
+.factorypath
+
+# ---- Java / Maven (backend) ----
+target/
+*.class
+
+# Maven wrapper: keep mvnw + maven-wrapper.jar (needed for ./mvnw on a fresh clone),
+# ignore only generated/local bits
+.mvn/timing.properties
+.mvn/.develocity/
+
+# Maven release / versions / flatten / shade plugin artifacts
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+.flattened-pom.xml
+buildNumber.properties
+
+# JVM crash logs
+hs_err_pid*
+replay_pid*
+*.log
+
+# ---- Spring Boot ----
+*.original
+.springBeans
+
+# ---- H2 embedded database (file-based) ----
+*.db
+*.mv.db
+*.trace.db
+*.lock.db
+
+# ---- Node / React (frontend phase) ----
+node_modules/
+dist/
+build/
+coverage/
+.vite/
+*.local
+
+# npm / yarn / pnpm debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ---- Environment / secrets ----
+.env
+.env.*
+!.env.example
+
+# ---- Misc ----
+*.tmp
+*.bak
+*~
