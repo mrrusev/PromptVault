@@ -11,5 +11,17 @@ CREATE TABLE IF NOT EXISTS collections (
     owner_id   BIGINT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_collections_owner FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
-    -- Module 3 note: add prompts FK with ON DELETE CASCADE on the prompts table
 );
+
+CREATE TABLE IF NOT EXISTS prompts (
+    id            BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    title         VARCHAR(255) NOT NULL,
+    content       CLOB NOT NULL,
+    collection_id BIGINT NOT NULL,
+    owner_id      BIGINT NOT NULL,
+    created_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_prompts_collection FOREIGN KEY (collection_id) REFERENCES collections(id) ON DELETE CASCADE,
+    CONSTRAINT fk_prompts_owner FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_prompts_owner_id ON prompts(owner_id);

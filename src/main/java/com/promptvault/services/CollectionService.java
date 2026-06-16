@@ -39,11 +39,11 @@ public class CollectionService {
      * never from the request body, preventing ownership spoofing.
      */
     public Mono<CollectionResponse> create(CollectionRequest request, Long ownerId) {
-        Collection c = new Collection();
-        c.setName(request.name());
-        c.setOwnerId(ownerId);
-        c.setCreatedAt(Instant.now());
-        return collectionRepository.save(c).map(this::toResponse);
+        Collection collection = new Collection();
+        collection.setName(request.name());
+        collection.setOwnerId(ownerId);
+        collection.setCreatedAt(Instant.now());
+        return collectionRepository.save(collection).map(this::toResponse);
     }
 
     /**
@@ -60,7 +60,8 @@ public class CollectionService {
                         : Mono.<Void>empty());
     }
 
-    private CollectionResponse toResponse(Collection c) {
-        return new CollectionResponse(c.getId(), c.getName(), c.getOwnerId(), c.getCreatedAt());
+    private CollectionResponse toResponse(Collection collection) {
+        return new CollectionResponse(collection.getId(), collection.getName(),
+                collection.getOwnerId(), collection.getCreatedAt());
     }
 }

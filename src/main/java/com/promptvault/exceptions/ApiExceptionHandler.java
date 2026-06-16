@@ -3,6 +3,7 @@ package com.promptvault.exceptions;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -41,5 +42,17 @@ public class ApiExceptionHandler {
     public ResponseEntity<Map<String, String>> handleCollectionNotFound(CollectionNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Map.of("error", "Collection not found"));
+    }
+
+    @ExceptionHandler(PromptNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handlePromptNotFound(PromptNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("error", "Prompt not found"));
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, String>> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("error", "Data integrity violation"));
     }
 }
