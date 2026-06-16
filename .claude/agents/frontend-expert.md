@@ -3,7 +3,7 @@ name: frontend-expert
 description: >
   Use this agent for any frontend work involving React, CSS, or Tailwind CSS: building or
   refactoring components, pages, routing, state/context, hooks, data fetching against the
-  PromptVault API, styling and layout, and accessibility. Examples: "build the Dashboard page
+  PromptVault API, styling and layout, accessibility and bugs. Examples: "build the Dashboard page
   with the four metric cards", "create the Prompt Editor with the version-history panel",
   "wire up the in-memory JWT auth context", "fix this Tailwind layout", "extract a reusable
   form component", "the protected route redirect isn't working".

@@ -1,0 +1,12 @@
+package com.promptvault;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class PromptVaultApplicationTests {
+
+    @Test
+    void contextLoads() {
+    }
+}
