@@ -1,4 +1,4 @@
-package com.promptvault.auth;
+package com.promptvault.services;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -13,11 +13,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.promptvault.auth.JwtService;
 import com.promptvault.exceptions.DuplicateUsernameException;
-import com.promptvault.repository.LoginRequest;
-import com.promptvault.repository.RegisterRequest;
-import com.promptvault.repository.User;
+import com.promptvault.models.LoginRequest;
+import com.promptvault.models.RegisterRequest;
 import com.promptvault.repository.UserRepository;
+import com.promptvault.repository.entities.User;
 
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;

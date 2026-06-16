@@ -1,29 +1,29 @@
-package com.promptvault.repository;
+package com.promptvault.repository.entities;
 
 import java.time.Instant;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table("users")
-public class User {
+@Table("collections")
+public class Collection {
 
     @Id
     private Long id;
 
-    private String username;
+    private String name;
 
-    private String password;
+    private Long ownerId;
 
     private Instant createdAt;
 
-    public User() {
+    public Collection() {
     }
 
-    public User(Long id, String username, String password, Instant createdAt) {
+    public Collection(Long id, String name, Long ownerId, Instant createdAt) {
         this.id = id;
-        this.username = username;
-        this.password = password;
+        this.name = name;
+        this.ownerId = ownerId;
         this.createdAt = createdAt;
     }
 
@@ -35,20 +35,20 @@ public class User {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getPassword() {
-        return password;
+    public Long getOwnerId() {
+        return ownerId;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 
     public Instant getCreatedAt() {

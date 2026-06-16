@@ -1,4 +1,4 @@
-package com.promptvault.repository;
+package com.promptvault.models;
 
 public record AuthResponse(String token, UserDto user) {
 }

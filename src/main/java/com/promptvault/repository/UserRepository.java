@@ -2,6 +2,8 @@ package com.promptvault.repository;
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
+import com.promptvault.repository.entities.User;
+
 import reactor.core.publisher.Mono;
 
 public interface UserRepository extends ReactiveCrudRepository<User, Long> {

@@ -7,7 +7,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-import com.promptvault.repository.User;
+import com.promptvault.repository.entities.User;
 
 import io.jsonwebtoken.Claims;
 

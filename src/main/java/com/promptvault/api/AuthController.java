@@ -1,4 +1,4 @@
-package com.promptvault.auth;
+package com.promptvault.api;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.promptvault.repository.AuthResponse;
-import com.promptvault.repository.LoginRequest;
-import com.promptvault.repository.RegisterRequest;
-import com.promptvault.repository.UserDto;
+import com.promptvault.auth.AuthenticatedUser;
+import com.promptvault.models.AuthResponse;
+import com.promptvault.models.LoginRequest;
+import com.promptvault.models.RegisterRequest;
+import com.promptvault.models.UserDto;
+import com.promptvault.services.AuthService;
 
 import jakarta.validation.Valid;
 import reactor.core.publisher.Mono;

@@ -1,4 +1,4 @@
-package com.promptvault.auth;
+package com.promptvault.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,12 +11,12 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import com.promptvault.repository.AuthResponse;
-import com.promptvault.repository.LoginRequest;
-import com.promptvault.repository.RegisterRequest;
-import com.promptvault.repository.User;
-import com.promptvault.repository.UserDto;
+import com.promptvault.models.AuthResponse;
+import com.promptvault.models.LoginRequest;
+import com.promptvault.models.RegisterRequest;
+import com.promptvault.models.UserDto;
 import com.promptvault.repository.UserRepository;
+import com.promptvault.repository.entities.User;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AuthControllerIntegrationTest {

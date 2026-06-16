@@ -1,4 +1,4 @@
-package com.promptvault.auth;
+package com.promptvault.services;
 
 import java.time.Instant;
 
@@ -6,13 +6,14 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.promptvault.auth.JwtService;
 import com.promptvault.exceptions.DuplicateUsernameException;
-import com.promptvault.repository.AuthResponse;
-import com.promptvault.repository.LoginRequest;
-import com.promptvault.repository.RegisterRequest;
-import com.promptvault.repository.User;
-import com.promptvault.repository.UserDto;
+import com.promptvault.models.AuthResponse;
+import com.promptvault.models.LoginRequest;
+import com.promptvault.models.RegisterRequest;
+import com.promptvault.models.UserDto;
 import com.promptvault.repository.UserRepository;
+import com.promptvault.repository.entities.User;
 
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
