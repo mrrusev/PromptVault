@@ -16,4 +16,8 @@ public interface PromptRepository extends ReactiveCrudRepository<Prompt, Long> {
     Mono<Prompt> findByIdAndOwnerId(Long id, Long ownerId);
 
     Mono<Long> deleteByIdAndOwnerId(Long id, Long ownerId);
+
+    Mono<Long> countByOwnerId(Long ownerId);
+
+    Mono<Prompt> findFirstByOwnerIdOrderByCreatedAtDesc(Long ownerId);
 }

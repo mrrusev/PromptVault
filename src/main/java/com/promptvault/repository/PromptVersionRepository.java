@@ -14,4 +14,6 @@ public interface PromptVersionRepository extends ReactiveCrudRepository<PromptVe
     Mono<PromptVersion> findTopByPromptIdOrderByVersionNumberDesc(Long promptId);
 
     Mono<PromptVersion> findByPromptIdAndVersionNumber(Long promptId, Integer versionNumber);
+
+    Mono<Long> countByOwnerId(Long ownerId);
 }

@@ -14,4 +14,6 @@ public interface CollectionRepository extends ReactiveCrudRepository<Collection,
     Mono<Collection> findByIdAndOwnerId(Long id, Long ownerId);
 
     Mono<Long> deleteByIdAndOwnerId(Long id, Long ownerId);
+
+    Mono<Long> countByOwnerId(Long ownerId);
 }

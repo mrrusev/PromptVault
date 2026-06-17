@@ -106,7 +106,7 @@ public class PromptService {
                         : Mono.<Void>empty());
     }
 
-    private PromptResponse toResponse(Prompt prompt) {
+    PromptResponse toResponse(Prompt prompt) {
         return new PromptResponse(prompt.getId(), prompt.getTitle(), prompt.getContent(),
                 prompt.getCollectionId(), prompt.getOwnerId(), prompt.getCreatedAt());
     }
