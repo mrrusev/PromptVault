@@ -50,6 +50,12 @@ public class ApiExceptionHandler {
                 .body(Map.of("error", "Prompt not found"));
     }
 
+    @ExceptionHandler(PromptVersionNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handlePromptVersionNotFound(PromptVersionNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("error", "Prompt version not found"));
+    }
+
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Map<String, String>> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)

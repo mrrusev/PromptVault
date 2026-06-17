@@ -1,0 +1,44 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c \"import json,sys,os; data=json.load(sys.stdin); sid=data.get('session_id','unknown'); prompt=str(data.get('message','') or data.get('prompt','') or data.get('tool_input',{}).get('prompt',''))[:150].replace('\\n',' '); open(f'/tmp/cc-prompt-{sid}.txt','w').write(prompt)\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c \"import json,sys; data=json.load(sys.stdin); sid=data.get('session_id','unknown'); name=data.get('tool_input',{}).get('skill','unknown'); open(f'/tmp/cc-usage-{sid}.txt','a').write('SKILL '+name+'\\n')\""
+          }
+        ]
+      },
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c \"import json,sys; data=json.load(sys.stdin); sid=data.get('session_id','unknown'); ti=data.get('tool_input',{}); name=ti.get('subagent_type') or ti.get('description','unknown'); open(f'/tmp/cc-usage-{sid}.txt','a').write('AGENT '+name+'\\n')\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c \"import json,os,sys; from collections import Counter; data=json.load(sys.stdin); sid=data.get('session_id',''); log='/Users/rusev/Desktop/Tech_Stuff/AI/SoftUni-AI/PromptVault/.claude/session-usage.log'; pf=f'/tmp/cc-prompt-{sid}.txt'; uf=f'/tmp/cc-usage-{sid}.txt'; prompt=open(pf).read().strip() if sid and os.path.exists(pf) else ''; raw=[l.strip() for l in open(uf).readlines() if l.strip()] if os.path.exists(uf) else []; skills=Counter(l[6:] for l in raw if l.startswith('SKILL ')); agents=Counter(l[6:] for l in raw if l.startswith('AGENT ')); skills_str=('skills: '+', '.join(s+(f' x{c}' if c>1 else '') for s,c in skills.most_common())) if skills else 'no skills'; agents_str=('agents: '+', '.join(a+(f' x{c}' if c>1 else '') for a,c in agents.most_common())) if agents else 'no agents'; line=sid+' | prompt=\\\"'+prompt+'\\\" | '+skills_str+' | '+agents_str; open(log,'a').write(line+'\\n'); os.remove(uf) if os.path.exists(uf) else None; sm_parts=['Prompt: '+prompt] if prompt else []; sm_parts+=['Skills: '+', '.join(s+(f' x{c}' if c>1 else '') for s,c in skills.most_common())] if skills else []; sm_parts+=['Agents: '+', '.join(a+(f' x{c}' if c>1 else '') for a,c in agents.most_common())] if agents else []; out=json.dumps({'systemMessage':'Turn summary:\\n'+chr(10).join(sm_parts)}) if (skills or agents) else '{}'; print(out)\""
+          }
+        ]
+      }
+    ]
+  }
+}

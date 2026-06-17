@@ -25,3 +25,17 @@ CREATE TABLE IF NOT EXISTS prompts (
 );
 
 CREATE INDEX IF NOT EXISTS idx_prompts_owner_id ON prompts(owner_id);
+
+CREATE TABLE IF NOT EXISTS prompt_versions (
+    id             BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    prompt_id      BIGINT NOT NULL,
+    owner_id       BIGINT NOT NULL,
+    content        CLOB NOT NULL,
+    version_number INTEGER NOT NULL,
+    created_at     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_versions_prompt FOREIGN KEY (prompt_id) REFERENCES prompts(id) ON DELETE CASCADE,
+    CONSTRAINT fk_versions_owner  FOREIGN KEY (owner_id)  REFERENCES users(id)   ON DELETE CASCADE,
+    CONSTRAINT uq_prompt_version  UNIQUE (prompt_id, version_number)
+);
+
+CREATE INDEX IF NOT EXISTS idx_versions_owner_id ON prompt_versions(owner_id);
