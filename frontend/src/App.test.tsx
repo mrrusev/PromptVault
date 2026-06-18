@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { HttpResponse, http } from 'msw';
 import { useEffect } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -6,6 +7,18 @@ import { App } from './App';
 import { AuthProvider, useAuth } from './auth/AuthContext';
 import { setToken } from './api/tokenStore';
 import { ROUTES } from './routes';
+import { server } from './test/server';
+
+const API = '*/api';
+
+// The dashboard route fetches GET /dashboard on mount; stub it so the routing
+// tests don't trip MSW's unhandled-request guard.
+const dashboardStub = {
+  totalCollections: 0,
+  totalPrompts: 0,
+  totalVersions: 0,
+  latestPrompt: null,
+};
 
 // Logs a user in on mount, then only mounts <App/> once auth state is true.
 // This guarantees App's routes commit at the requested location already
@@ -49,6 +62,7 @@ describe('routing — unauthenticated', () => {
 
 describe('routing — authenticated', () => {
   it('redirects / to the dashboard', async () => {
+    server.use(http.get(`${API}/dashboard`, () => HttpResponse.json(dashboardStub)));
     renderApp(ROUTES.root, true);
 
     expect(
