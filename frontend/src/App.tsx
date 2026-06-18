@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useAuth } from './auth/AuthContext';
 import { ProtectedRoute } from './auth/ProtectedRoute';
+import { AppShell } from './components/AppShell';
 import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { CollectionsPage } from './pages/CollectionsPage';
@@ -19,9 +20,11 @@ export function App() {
       <Route path={ROUTES.login} element={<LoginPage />} />
 
       <Route element={<ProtectedRoute />}>
-        <Route path={ROUTES.dashboard} element={<DashboardPage />} />
-        <Route path={ROUTES.collections} element={<CollectionsPage />} />
-        <Route path={ROUTES.promptPattern} element={<PromptEditorPage />} />
+        <Route element={<AppShell />}>
+          <Route path={ROUTES.dashboard} element={<DashboardPage />} />
+          <Route path={ROUTES.collections} element={<CollectionsPage />} />
+          <Route path={ROUTES.promptPattern} element={<PromptEditorPage />} />
+        </Route>
       </Route>
 
       {/* Unknown routes fall back to the root redirect (login or dashboard). */}

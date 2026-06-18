@@ -3,6 +3,7 @@ import { HttpResponse, http } from 'msw';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, describe, expect, it } from 'vitest';
 import { AuthProvider } from '../auth/AuthContext';
+import { WorkspaceProvider } from '../workspace/WorkspaceContext';
 import { setToken } from '../api/tokenStore';
 import { ROUTES } from '../routes';
 import { server } from '../test/server';
@@ -14,7 +15,9 @@ function renderDashboard() {
   return render(
     <MemoryRouter initialEntries={[ROUTES.dashboard]}>
       <AuthProvider>
-        <DashboardPage />
+        <WorkspaceProvider>
+          <DashboardPage />
+        </WorkspaceProvider>
       </AuthProvider>
     </MemoryRouter>,
   );

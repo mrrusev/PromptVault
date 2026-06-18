@@ -4,6 +4,7 @@ export const ROUTES = {
   login: '/login',
   dashboard: '/dashboard',
   collections: '/collections',
+  collectionSelected: (id: string | number) => `/collections?selected=${id}`,
   prompt: (id: string | number) => `/prompts/${id}`,
   promptPattern: '/prompts/:id',
 } as const;

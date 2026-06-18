@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { getDashboard } from '../api/endpoints';
 import { RequestError } from '../api/client';
 import { ROUTES } from '../routes';
+import { useWorkspace } from '../workspace/WorkspaceContext';
 import type { DashboardResponse } from '../api/types';
 
 const CONTENT_PREVIEW_LENGTH = 140;
@@ -25,6 +26,9 @@ export function DashboardPage() {
   const [data, setData] = useState<DashboardResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(true);
+  // Refetch the aggregate counts whenever the workspace changes (e.g. a
+  // collection is created or deleted from the sidebar), so the cards stay live.
+  const { revision } = useWorkspace();
 
   useEffect(() => {
     let active = true;
@@ -52,21 +56,21 @@ export function DashboardPage() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [revision]);
 
   return (
-    <main className="min-h-screen bg-gray-50 p-6">
+    <section>
       <h1 className="text-xl font-semibold text-gray-900">Dashboard</h1>
 
-      {pending && <p className="mt-4 text-sm text-gray-500">Loading…</p>}
+      {pending && !data && <p className="mt-4 text-sm text-gray-500">Loading…</p>}
 
-      {!pending && error && (
+      {error && (
         <p role="alert" className="mt-4 rounded bg-red-50 p-2 text-sm text-red-700">
           {error}
         </p>
       )}
 
-      {!pending && !error && data && (
+      {!error && data && (
         <div className="mt-6 space-y-6">
           <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <MetricCard label="Collections" value={data.totalCollections} />
@@ -96,6 +100,6 @@ export function DashboardPage() {
           </section>
         </div>
       )}
-    </main>
+    </section>
   );
 }

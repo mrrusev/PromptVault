@@ -1,10 +1,12 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { HttpResponse, http } from 'msw';
 import { useEffect } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { App } from './App';
 import { AuthProvider, useAuth } from './auth/AuthContext';
+import { WorkspaceProvider } from './workspace/WorkspaceContext';
 import { setToken } from './api/tokenStore';
 import { ROUTES } from './routes';
 import { server } from './test/server';
@@ -34,7 +36,9 @@ function SeedAuth() {
 function renderApp(initialPath: string, authenticated: boolean) {
   return render(
     <MemoryRouter initialEntries={[initialPath]}>
-      <AuthProvider>{authenticated ? <SeedAuth /> : <App />}</AuthProvider>
+      <AuthProvider>
+        <WorkspaceProvider>{authenticated ? <SeedAuth /> : <App />}</WorkspaceProvider>
+      </AuthProvider>
     </MemoryRouter>,
   );
 }
@@ -62,7 +66,11 @@ describe('routing — unauthenticated', () => {
 
 describe('routing — authenticated', () => {
   it('redirects / to the dashboard', async () => {
-    server.use(http.get(`${API}/dashboard`, () => HttpResponse.json(dashboardStub)));
+    server.use(
+      http.get(`${API}/dashboard`, () => HttpResponse.json(dashboardStub)),
+      // The AppShell mounts the collections sidebar on every protected route.
+      http.get(`${API}/collections`, () => HttpResponse.json([])),
+    );
     renderApp(ROUTES.root, true);
 
     expect(
@@ -71,10 +79,53 @@ describe('routing — authenticated', () => {
   });
 
   it('renders a protected route element when authenticated', async () => {
+    server.use(http.get(`${API}/collections`, () => HttpResponse.json([])));
     renderApp(ROUTES.collections, true);
 
+    // Level 1 disambiguates the page heading from the sidebar's "Collections" h2.
     expect(
-      await screen.findByRole('heading', { name: /collections/i }),
+      await screen.findByRole('heading', { level: 1, name: /collections/i }),
     ).toBeInTheDocument();
+  });
+
+  it('refreshes the dashboard counts when a collection is created from the sidebar', async () => {
+    // The dashboard's collection count tracks server state; creating a
+    // collection bumps it, proving the sidebar and dashboard stay in sync
+    // without navigating away and back.
+    let collectionsCount = 0;
+    server.use(
+      http.get(`${API}/dashboard`, () =>
+        HttpResponse.json({ ...dashboardStub, totalCollections: collectionsCount }),
+      ),
+      http.get(`${API}/collections`, () => HttpResponse.json([])),
+      http.post(`${API}/collections`, async ({ request }) => {
+        const body = (await request.json()) as { name: string };
+        collectionsCount += 1;
+        return HttpResponse.json({
+          id: 1,
+          name: body.name,
+          ownerId: 1,
+          createdAt: '2026-06-18T10:00:00Z',
+        });
+      }),
+    );
+
+    renderApp(ROUTES.dashboard, true);
+
+    // Scope assertions to the Collections metric card (the page also has a
+    // sidebar "Collections" heading), so this proves the card value, not a
+    // stray "0"/"1" elsewhere on the page.
+    await screen.findByRole('heading', { level: 1, name: /dashboard/i });
+    const collectionsCard = (
+      await screen.findByText('Collections', { selector: 'dt' })
+    ).closest('div') as HTMLElement;
+    expect(within(collectionsCard).getByText('0')).toBeInTheDocument();
+
+    // Create a collection via the sidebar's inline form without leaving the page.
+    await userEvent.type(screen.getByLabelText(/new collection name/i), 'Research');
+    await userEvent.click(screen.getByRole('button', { name: 'Add' }));
+
+    // The Collections card refreshes from 0 to 1 in place.
+    expect(await within(collectionsCard).findByText('1')).toBeInTheDocument();
   });
 });
