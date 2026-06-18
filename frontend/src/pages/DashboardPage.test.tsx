@@ -26,7 +26,7 @@ function renderDashboard() {
 afterEach(() => setToken(null));
 
 describe('DashboardPage', () => {
-  it('renders the four metrics and the latest prompt on success', async () => {
+  it('renders the three stat cards and the recent prompt on success', async () => {
     server.use(
       http.get(`${API}/dashboard`, () =>
         HttpResponse.json({
@@ -52,13 +52,14 @@ describe('DashboardPage', () => {
     expect(screen.getByText('3')).toBeInTheDocument();
     expect(screen.getByText('5')).toBeInTheDocument();
 
-    // Labels for the four metric cards.
-    expect(screen.getByText(/collections/i)).toBeInTheDocument();
+    // Labels for the three stat cards.
+    expect(screen.getByText(/^collections$/i)).toBeInTheDocument();
     expect(screen.getByText(/^prompts$/i)).toBeInTheDocument();
-    expect(screen.getByText(/versions/i)).toBeInTheDocument();
+    expect(screen.getByText(/^versions$/i)).toBeInTheDocument();
 
-    // Latest prompt links to its editor route.
-    const link = screen.getByRole('link', { name: /my latest prompt/i });
+    // Recent prompt title renders and the "Open editor" action links to the editor route.
+    expect(screen.getByRole('heading', { name: /my latest prompt/i })).toBeInTheDocument();
+    const link = screen.getByRole('link', { name: /open editor/i });
     expect(link).toHaveAttribute('href', ROUTES.prompt(42));
     expect(screen.getByText(/generate a haiku about reactive streams/i)).toBeInTheDocument();
   });
@@ -77,10 +78,11 @@ describe('DashboardPage', () => {
 
     renderDashboard();
 
-    // Three count cards plus the "Latest prompt" card all show 0.
-    expect(await screen.findAllByText('0')).toHaveLength(4);
+    // The three stat cards all show 0.
+    expect(await screen.findAllByText('0')).toHaveLength(3);
     expect(screen.getByText(/no prompts yet/i)).toBeInTheDocument();
-    expect(screen.queryByRole('link')).not.toBeInTheDocument();
+    // The friendly empty state offers a CTA to collections, but no prompt-editor link.
+    expect(screen.queryByRole('link', { name: /open editor/i })).not.toBeInTheDocument();
   });
 
   it('shows an error via role="alert" when the request fails', async () => {

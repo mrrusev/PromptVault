@@ -73,8 +73,10 @@ describe('routing — authenticated', () => {
     );
     renderApp(ROUTES.root, true);
 
+    // The dashboard subtitle is a stable, time-independent signal that the
+    // redirect landed on the dashboard (the h1 is a time-of-day greeting).
     expect(
-      await screen.findByRole('heading', { name: /dashboard/i }),
+      await screen.findByText(/here's what's in your vault/i),
     ).toBeInTheDocument();
   });
 
@@ -114,11 +116,12 @@ describe('routing — authenticated', () => {
 
     // Scope assertions to the Collections metric card (the page also has a
     // sidebar "Collections" heading), so this proves the card value, not a
-    // stray "0"/"1" elsewhere on the page.
-    await screen.findByRole('heading', { level: 1, name: /dashboard/i });
+    // stray "0"/"1" elsewhere on the page. The card is the <dt>'s ancestor
+    // that also contains the <dd> count.
+    await screen.findByText(/here's what's in your vault/i);
     const collectionsCard = (
       await screen.findByText('Collections', { selector: 'dt' })
-    ).closest('div') as HTMLElement;
+    ).closest('dl > div') as HTMLElement;
     expect(within(collectionsCard).getByText('0')).toBeInTheDocument();
 
     // Create a collection via the sidebar's inline form without leaving the page.
